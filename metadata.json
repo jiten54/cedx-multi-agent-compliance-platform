@@ -1,0 +1,6 @@
+{
+  "name": "CEDX Multi-Agent Fleet Workspace",
+  "description": "Secure, compliant multi-agent workstation implementing a transaction ledger, integrity signatures, and verification audits for CASE_ID CEDX-55BBED.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

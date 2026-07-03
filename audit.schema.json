@@ -1,0 +1,103 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CEDXAgentFleetAudit",
+  "type": "object",
+  "required": ["caseId", "runId", "timestamp", "input", "plan", "steps", "status", "finalHash"],
+  "properties": {
+    "caseId": {
+      "type": "string",
+      "enum": ["CEDX-55BBED"]
+    },
+    "runId": {
+      "type": "string",
+      "pattern": "^run-[a-zA-Z0-9_-]+$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["completed", "failed"]
+    },
+    "input": {
+      "type": "object",
+      "required": ["id", "client", "amount", "category", "description", "timestamp"],
+      "properties": {
+        "id": { "type": "string" },
+        "client": { "type": "string" },
+        "amount": { "type": "number" },
+        "category": { "type": "string" },
+        "description": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "notes": { "type": "string" }
+      }
+    },
+    "plan": {
+      "type": "object",
+      "required": ["runId", "stages", "steps", "thresholdTriggered"],
+      "properties": {
+        "runId": { "type": "string" },
+        "stages": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["agent", "purpose", "required"],
+            "properties": {
+              "agent": { "type": "string" },
+              "purpose": { "type": "string" },
+              "required": { "type": "boolean" }
+            }
+          }
+        },
+        "thresholdTriggered": { "type": "boolean" },
+        "assignedWorkers": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["stage", "agent", "action", "timestamp", "status", "data"],
+        "properties": {
+          "stage": {
+            "type": "string",
+            "enum": ["Intake", "Orchestration", "Assembly", "Review", "Compliance", "Delivery"]
+          },
+          "agent": { "type": "string" },
+          "action": { "type": "string" },
+          "timestamp": { "type": "string" },
+          "status": {
+            "type": "string",
+            "enum": ["success", "warning", "failed"]
+          },
+          "data": { "type": ["object", "array", "string", "number", "null"] },
+          "signature": { "type": "string" }
+        }
+      }
+    },
+    "deliveryPayload": {
+      "type": "object",
+      "required": ["receiptId", "deliveredAt", "recipient", "amount", "digest", "complianceSigned"],
+      "properties": {
+        "receiptId": { "type": "string" },
+        "deliveredAt": { "type": "string" },
+        "recipient": { "type": "string" },
+        "amount": { "type": "number" },
+        "digest": { "type": "string" },
+        "complianceSigned": { "type": "boolean" }
+      }
+    },
+    "finalHash": {
+      "type": "string",
+      "pattern": "^[a-fA-F0-9]{64}$"
+    }
+  }
+}

@@ -1,0 +1,2 @@
+# Requirements for CEDX Python Compliance Audit
+jsonschema>=4.18.0

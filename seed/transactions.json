@@ -1,0 +1,58 @@
+{
+  "transactions": [
+    {
+      "id": "TX-CEDX-101",
+      "client": "Vertex Global Energy",
+      "amount": 24500,
+      "category": "Carbon Offset",
+      "description": "Verification and purchase of standard forest conservation credits.",
+      "timestamp": "2026-07-01T10:15:30Z",
+      "notes": "Standard green compliance packet."
+    },
+    {
+      "id": "TX-CEDX-102",
+      "client": "Tesla Gigafactory Europe",
+      "amount": 42000,
+      "category": "Energy Credit",
+      "description": "High-capacity battery grid feed-in and renewable certificate transfer.",
+      "timestamp": "2026-07-02T08:30:00Z",
+      "notes": "Requires rapid compliance verification due to regional grid standards."
+    },
+    {
+      "id": "TX-CEDX-103",
+      "client": "Novartis Biopharma",
+      "amount": 18900,
+      "category": "Waste Management",
+      "description": "Bio-hazardous neutral material waste lifecycle processing audit.",
+      "timestamp": "2026-07-02T11:45:12Z",
+      "notes": "Regular quarterly disposal report."
+    },
+    {
+      "id": "TX-CEDX-104",
+      "client": "Rio Tinto Mining Group",
+      "amount": 89000,
+      "category": "Carbon Offset",
+      "description": "Industrial heavy machinery conversion carbon offset validation.",
+      "timestamp": "2026-07-02T14:20:00Z",
+      "notes": "Critical review required. Subject to global cross-border emission taxes."
+    },
+    {
+      "id": "TX-CEDX-105",
+      "client": "Amazon Data Services Ireland",
+      "amount": 31500,
+      "category": "Renewable Certificate",
+      "description": "Offshore wind farm generator power purchase agreement (PPA) audit.",
+      "timestamp": "2026-07-03T09:00:00Z",
+      "notes": "Borderline threshold packet."
+    },
+    {
+      "id": "TX-CEDX-106",
+      "client": "Aramco Carbon Solutions",
+      "amount": 125000,
+      "category": "Carbon Offset",
+      "description": "Blue hydrogen methane capture carbon reduction credits validation.",
+      "timestamp": "2026-07-03T16:40:22Z",
+      "notes": "Ultra-high value portfolio transfer. Must undergo full multi-jurisdictional compliance vetting."
+    }
+  ]
+}
