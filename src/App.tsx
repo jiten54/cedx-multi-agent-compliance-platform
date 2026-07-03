@@ -31,6 +31,8 @@ import {
   Truck
 } from "lucide-react";
 
+const API_BASE_URL = ((import.meta as any).env?.VITE_API_URL || "").replace(/\/$/, "");
+
 export default function App() {
   const [seeds, setSeeds] = useState<CEDXTransaction[]>([]);
   const [history, setHistory] = useState<AuditTrail[]>([]);
@@ -68,7 +70,7 @@ export default function App() {
   // Set default active view once seeds load
   const fetchSeeds = async () => {
     try {
-      const res = await fetch("/api/fleet/seeds");
+      const res = await fetch(`${API_BASE_URL}/api/fleet/seeds`);
       const data = await res.json();
       if (data && data.transactions) {
         setSeeds(data.transactions);
@@ -82,7 +84,7 @@ export default function App() {
 
   const fetchExceptions = async () => {
     try {
-      const res = await fetch("/api/fleet/exceptions");
+      const res = await fetch(`${API_BASE_URL}/api/fleet/exceptions`);
       const data = await res.json();
       if (Array.isArray(data)) {
         setExceptions(data);
@@ -94,7 +96,7 @@ export default function App() {
 
   const fetchHistory = async () => {
     try {
-      const res = await fetch("/api/fleet/history");
+      const res = await fetch(`${API_BASE_URL}/api/fleet/history`);
       const data = await res.json();
       if (Array.isArray(data)) {
         setHistory(data);
@@ -112,7 +114,7 @@ export default function App() {
     setIsRunning(true);
     setTerminalOutput(null); // Reset terminal outputs for fresh run
     try {
-      const res = await fetch("/api/fleet/run", {
+      const res = await fetch(`${API_BASE_URL}/api/fleet/run`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ transaction: tx }),
@@ -153,7 +155,7 @@ export default function App() {
   const handleRunVerifyScript = async () => {
     setIsVerifying(true);
     try {
-      const res = await fetch("/api/fleet/verify", { method: "POST" });
+      const res = await fetch(`${API_BASE_URL}/api/fleet/verify`, { method: "POST" });
       const data = await res.json();
       
       const formattedOutput = data.success
@@ -189,7 +191,7 @@ export default function App() {
 
     setIsSpeaking(true);
     try {
-      const res = await fetch("/api/fleet/voice", {
+      const res = await fetch(`${API_BASE_URL}/api/fleet/voice`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: summaryText })

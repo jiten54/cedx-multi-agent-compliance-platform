@@ -38,7 +38,32 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+
+// Production CORS Support with local development fallbacks
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  const allowedOrigins = [
+    "https://cedx-multi-agent-compliance-platfor.vercel.app",
+    "http://localhost:5173",
+    "http://localhost:3000"
+  ];
+  if (origin && allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  } else if (!origin) {
+    // Allow non-browser agents (like curl, test scripts) to test endpoints
+    res.setHeader("Access-Control-Allow-Origin", "*");
+  }
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
 app.use(express.json());
 
 // In-memory history cache
@@ -63,7 +88,12 @@ if (!fs.existsSync(seedDir)) {
 
 // Lazy load Gemini client
 let aiClient: GoogleGenAI | null = null;
+let isKeyDisabled = false;
+
 function getGeminiClient(): GoogleGenAI | null {
+  if (isKeyDisabled) {
+    return null;
+  }
   if (!aiClient) {
     const key = process.env.GEMINI_API_KEY;
     if (key && key !== "MY_GEMINI_API_KEY" && key.trim() !== "") {
@@ -108,8 +138,15 @@ async function askAgent(agent: AgentName, systemPrompt: string, userPrompt: stri
       if (response.text) {
         return response.text.trim();
       }
-    } catch (error) {
-      console.error(`[Gemini API] Error calling Gemini for ${agent}, falling back:`, error);
+    } catch (error: any) {
+      const errMsg = error?.message || String(error);
+      if (errMsg.includes("leaked") || errMsg.includes("PERMISSION_DENIED") || errMsg.includes("403")) {
+        console.warn(`[Gemini API] API key flagged as leaked or permission denied during ${agent} query. Disabling future API calls and using local experts fallback.`);
+        isKeyDisabled = true;
+        aiClient = null;
+      } else {
+        console.error(`[Gemini API] Error calling Gemini for ${agent}, falling back:`, error);
+      }
     }
   }
   return fallbackResponse;
@@ -643,8 +680,15 @@ app.post("/api/fleet/voice", async (req, res) => {
       if (base64Audio) {
         return res.json({ audio: base64Audio });
       }
-    } catch (err) {
-      console.error("[Gemini API] Failed to generate TTS:", err);
+    } catch (err: any) {
+      const errMsg = err?.message || String(err);
+      if (errMsg.includes("leaked") || errMsg.includes("PERMISSION_DENIED") || errMsg.includes("403")) {
+        console.warn("[Gemini API] API key flagged as leaked or permission denied during TTS generation. Disabling future API calls.");
+        isKeyDisabled = true;
+        aiClient = null;
+      } else {
+        console.error("[Gemini API] Failed to generate TTS:", err);
+      }
     }
   }
 
